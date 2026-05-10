@@ -143,7 +143,7 @@ def call_ollama(prompt):
         r = requests.post(
             "http://localhost:11434/api/generate",
             json={
-                "model": "llama3",
+                "model": "phi3:mini",
                 "prompt": final_prompt,
                 "stream": False
             },

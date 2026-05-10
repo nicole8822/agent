@@ -28,7 +28,7 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-REQUEST_TIMEOUT = 60
+REQUEST_TIMEOUT = 120
 BACKOFF = 5
 
 # =========================================================
@@ -143,7 +143,7 @@ def call_ollama(prompt):
         r = requests.post(
             "http://localhost:11434/api/generate",
             json={
-                "model": "phi3:mini",
+                "model": "llama3",
                 "prompt": final_prompt,
                 "stream": False
             },
@@ -366,3 +366,22 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+# =========================================================
+# 🔧 OPTIONAL DIAGNOSTICS LAYER (NON-BREAKING)
+# =========================================================
+
+def check_supabase_health():
+    try:
+        r = requests.get(BASE_URL, timeout=10)
+        log(f"🔍 Supabase health: {r.status_code}")
+    except Exception as e:
+        log(f"⚠️ Supabase unreachable: {e}")
+
+def check_ollama_health():
+    try:
+        r = requests.get("http://localhost:11434/api/tags", timeout=5)
+        log(f"🧠 Ollama status: {r.status_code}")
+    except Exception:
+        log("⚠️ Ollama not running")
+
